@@ -20,7 +20,7 @@ task :build do
       if !File.exist?(File.join(srcdir, "Makefile"))
         prev = pwd
         cd srcdir
-        system "ruby extconf.rb"
+        system "/usr/local/bin/ruby1.9 extconf.rb"
         cd prev
       end
       `make -C #{srcdir}`
@@ -31,4 +31,9 @@ task :build do
       end
     end
   end
+end
+
+desc "Clean project"
+task :clean do
+  rm(%w{ext/*.bundle ext/*.so ext/*.o ext/Makefile lib/*.bundle lib/*.so}, force: true, verbose: true)
 end
