@@ -1,0 +1,11 @@
+#!/usr/local/bin/ruby1.9
+require 'webrick'
+
+root = File.expand_path(File.dirname(__FILE__) + "/../test/fixtures/html")
+server = WEBrick::HTTPServer.new(Port: 4331, DocumentRoot: root)
+
+# trap signals to invoke the shutdown procedure cleanly
+['INT', 'TERM'].each { |signal|
+   trap(signal){ server.shutdown}
+}
+server.start
