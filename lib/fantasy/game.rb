@@ -50,7 +50,8 @@ class Fantasy
 
     def parse_body
       type, team, headers = nil
-      pos, md = @@parsing_re.matchn(@body, 0)
+      md  = @@parsing_re.match(@body, 0)
+      pos = md ? md.begin(0) : nil
       while pos
         case
           when md[:type_name]
@@ -80,7 +81,8 @@ class Fantasy
               player.via(type).had(stat, headers[i])
             end
         end
-        pos, md = @@parsing_re.matchn(@body, pos+1)
+        md = @@parsing_re.match(@body, pos+1)
+        pos = md ? md.begin(0) : nil
       end
     end
   end
