@@ -4,21 +4,39 @@ class Fantasy
     @@parsing_re = %r!
       (?<type>
         <tr\sclass="yspsctbg">[\s\n]+
-        <td\swidth="\d+%"\sheight="18"\sclass="ysptblhdr">
-          &nbsp; (?<type_name> [\w\s\\]+ )
+        <td.+class="ysptblhdr">
+          &nbsp;
+          (?<type_name>
+            Passing | Rushing | Receiving | Kicking | Punting |
+            Kick/Punt\sReturns | Defense
+          )
         </td>
       ){0}
       (?<team>
         <tr\sclass="ysptblthbody1"\salign="right">[\s\n]+
-          <td\sheight="18"\sclass="yspdetailttl\sfirst"\salign="left">
-            &nbsp; (?<team_name> [\w\s]+ )
-          </td>
+          <td.+class="yspdetailttl\sfirst"\salign="left">
+            &nbsp; (?<team_name> [\w\s\.]+ )
+          </td>[\s\n]+
+          (?<team_headers>
+          (?:
+          <td.+class="yspdetailttl">[\w\d/]+(?:&nbsp;)?</td>[\s\n]+
+          )+
+          )
+        </tr>
       ){0}
       (?<player>
         <tr\sclass="ysprow1"\salign="right">[\s\n]+
           <td\sclass="first"\salign="left">
             &nbsp; (?<player_name> [\w\s\.\-']+ )
-          </td>
+          </td>[\s\n]+
+          (?<player_stats>
+          (?:
+          <td>
+            \d+(?:\.\d+)?(?:&nbsp;)?
+          </td>[\s\n]+
+          )+
+          )
+        </tr>
       ){0}
 
       (?:\g<type>|\g<team>|\g<player>)
@@ -27,39 +45,39 @@ class Fantasy
     attr_reader :home_team, :away_team
     def initialize(body)
       @body = body
-
-      set_teams
-      create_players
+      parse_body
     end
 
-    def set_teams
-      # <td class="yspsctnhdln">
-      #   <a href="/nfl/teams/ten">Tennessee</a> 19,
-      #   <a href="/nfl/teams/gnb">Green Bay</a> 16
-      %r{
-        <td\sclass="yspsctnhdln">[\s\n]+
-        <a\shref="/nfl/teams/\w{3}">(?<home>[\w\s]+)</a>\s+\d+,[\s\n]+
-        <a\shref="/nfl/teams/\w{3}">(?<away>[\w\s]+)</a>
-      }x =~ @body
-      @home_team = Team.new(home)
-      @away_team = Team.new(away)
-    end
-
-    def create_players
-      type, team = nil
+    def parse_body
+      type, team, headers = nil
       pos, md = @@parsing_re.matchn(@body, 0)
       while pos
         case
           when md[:type_name]
             type = md[:type_name]
+            team = nil
+            puts "Type: #{type}"  if $DEBUG
           when md[:team_name]
-            team = team ? @home_team : @away_team
+            puts "  Team: #{md[:team_name]}"  if $DEBUG
+            if team.nil?
+              team = @away_team ||= Team.new(md[:team_name])
+            else
+              team = @home_team ||= Team.new(md[:team_name])
+            end
+            headers = md[:team_headers].scan(/>([\w\d\/]+)(?:&nbsp;)?</)
+            headers.flatten!
           when md[:player_name]
             name = md[:player_name]
+            puts "    Player: #{name}"  if $DEBUG
             player = team.find_player(name)
             unless player
               player = Player.new(name)
               team.add(player)
+            end
+            stats = md[:player_stats].scan(/>(\d+(?:\.\d+)?)(?:&nbsp;)?</)
+            stats.flatten!
+            stats.each_with_index do |stat, i|
+              player.via(type).had(stat, headers[i])
             end
         end
         pos, md = @@parsing_re.matchn(@body, pos+1)

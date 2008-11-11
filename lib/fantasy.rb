@@ -3,11 +3,17 @@ require 'curb'
 require 'uri'
 
 class Fantasy
-  attr_reader :scoreboard, :games
+  attr_reader :scoreboard, :games, :config
 
   def initialize(url)
+    @url = url
     @fetcher = Fetcher.new(url)
-    @fetcher.fetch([url]) do |url, body|
+    @config = Config.new
+    yield @config
+  end
+
+  def run
+    @fetcher.fetch([@url]) do |url, body|
       @scoreboard = Scoreboard.new(body)
     end
     @games = []
@@ -15,9 +21,14 @@ class Fantasy
       @games << Game.new(body)
     end
   end
+
+  def points_for(*args)
+    @config.points_for(*args)
+  end
 end
 
 require 'matchn'
+require 'fantasy/config'
 require 'fantasy/fetcher'
 require 'fantasy/scoreboard'
 require 'fantasy/game'

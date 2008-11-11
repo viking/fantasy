@@ -15,6 +15,7 @@ class Fantasy
 
         threads << Thread.new(uri.to_s) do |url|
           body = Curl::Easy.perform(url).body_str
+          puts "Done fetching: #{url}"  if $DEBUG
           callback.(url, body)
         end
       end
