@@ -9,7 +9,7 @@ class Fantasy
     @url = url
     @fetcher = Fetcher.new(url)
     @config = Config.new
-    yield @config
+    yield @config   if block_given?
   end
 
   def run
