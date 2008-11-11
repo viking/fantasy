@@ -27,7 +27,6 @@ class Fantasy
   end
 end
 
-require 'matchn'
 require 'fantasy/config'
 require 'fantasy/fetcher'
 require 'fantasy/scoreboard'
