@@ -29,5 +29,9 @@ class TestFantasy < MiniTest::Unit::TestCase
       assert_in_delta(180.0, kc.stats["Passing"]["Yds"])
       assert_in_delta(3.0,   bj.stats["Rushing"]["Lng"])
     end
+
+    def test_score_aggregation
+      skip("TODO")
+    end
   end
 end

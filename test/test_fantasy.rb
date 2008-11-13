@@ -76,7 +76,39 @@ class TestFantasy < MiniTest::Unit::TestCase
   end
 
   def test_defense_config
-    skip("TODO")
+    @fantasy.config.for("Defense") do
+      give(1).point.foreach("Sack")
+      give(2).points.foreach("Int")
+      give(2).points.foreach("FumR")
+      give(6).points.foreach("IntTD")
+      give(2).points.foreach("Safety")
+      give(2).points.foreach("Blk")
+      give(10).points.for(0..0, "PtsAllowed")
+      give(7).points.for(1..6, "PtsAllowed")
+      give(4).points.for(7..13, "PtsAllowed")
+      give(1).point.for(14..20, "PtsAllowed")
+      take(1).point.for(21..34, "PtsAllowed")
+      take(4).point.for(35..99, "PtsAllowed")
+    end
+    assert_in_delta( 3.0, @fantasy.points_for( 3, "Defense", "Sack"))
+    assert_in_delta( 4.0, @fantasy.points_for( 2, "Defense", "Int"))
+    assert_in_delta( 4.0, @fantasy.points_for( 2, "Defense", "FumR"))
+    assert_in_delta( 6.0, @fantasy.points_for( 1, "Defense", "IntTD"))
+    assert_in_delta( 2.0, @fantasy.points_for( 1, "Defense", "Safety"))
+    assert_in_delta( 2.0, @fantasy.points_for( 1, "Defense", "Blk"))
+    assert_in_delta(10.0, @fantasy.points_for( 0, "Defense", "PtsAllowed"))
+    assert_in_delta( 7.0, @fantasy.points_for( 3, "Defense", "PtsAllowed"))
+    assert_in_delta( 4.0, @fantasy.points_for(12, "Defense", "PtsAllowed"))
+    assert_in_delta( 1.0, @fantasy.points_for(17, "Defense", "PtsAllowed"))
+    assert_in_delta(-1.0, @fantasy.points_for(28, "Defense", "PtsAllowed"))
+    assert_in_delta(-4.0, @fantasy.points_for(47, "Defense", "PtsAllowed"))
+  end
+
+  def test_kick_punt_returns_config
+    @fantasy.config.for("Kick/Punt Returns") do
+      give(6).points.foreach("TD")
+    end
+    assert_in_delta(6.0, @fantasy.points_for(1, "Kick/Punt Returns", "TD"))
   end
 
   def test_makes_scoreboard
