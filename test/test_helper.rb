@@ -31,7 +31,7 @@ module ConfigHelper
   def create_config
     config = Fantasy::Config.new
     config.for("Passing") do
-      give(1).point.per(25, "Yds")
+      give(1).point.per(50, "Yds")
       give(6).points.foreach("TD")
       take(2).points.foreach("Int")
       take(1).point.foreach("Sack")

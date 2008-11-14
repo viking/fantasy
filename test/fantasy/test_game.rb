@@ -4,16 +4,22 @@ class TestFantasy < MiniTest::Unit::TestCase
   class TestGame < MiniTest::Unit::TestCase
     include ConfigHelper
 
-    def create_game(num)
+    def create_game(num, config = create_config)
       fn = "/nfl/boxscore_%03d.html" % num
       @text = File.read(HTML_DIR + fn)
-      Fantasy::Game.new(@text, create_config)
+      Fantasy::Game.new(@text, config)
     end
 
     def test_teams
       game = create_game(7)
       assert_equal("Tennessee", game.home_team.name)
       assert_equal("Green Bay", game.away_team.name)
+    end
+
+    def test_team_scores
+      game = create_game(7)
+      assert_equal(19, game.home_team.score)
+      assert_equal(16, game.away_team.score)
     end
 
     def test_dot_in_team_name
@@ -25,17 +31,23 @@ class TestFantasy < MiniTest::Unit::TestCase
     def test_passing_players
       game = create_game(7)
       kc = game.home_team.find_player("K. Collins")
-      bj = game.away_team.find_player("B. Jackson")
       refute_nil(kc)
-      refute_nil(bj)
       assert_in_delta(180.0, kc.stats["Passing"]["Yds"])
-      assert_in_delta(3.0,   bj.stats["Rushing"]["Lng"])
     end
 
-#    def test_score_aggregation
-#      game = create_game(7)
-#      kc = game.home_team.find_player("K. Collins")
-#      assert_in_delta(2.0, kc.points)
-#    end
+    def test_rushing_players
+      game = create_game(7)
+      bj = game.away_team.find_player("B. Jackson")
+      refute_nil(bj)
+      assert_in_delta(3.0, bj.stats["Rushing"]["Lng"])
+    end
+
+    def test_team_defense
+      game = create_game(7)
+      df = game.home_team.find_player("Defense")
+      refute_nil(df)
+      p df.stats
+      assert_in_delta(9.0, df.points)
+    end
   end
 end

@@ -18,7 +18,7 @@ class Fantasy
     end
     @games = []
     @fetcher.fetch(@scoreboard.box_scores) do |url, body|
-      @games << Game.new(body)
+      @games << Game.new(body, @config)
     end
   end
 

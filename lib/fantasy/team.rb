@@ -1,9 +1,11 @@
 class Fantasy
   class Team
     attr_reader :name, :players
+    attr_accessor :score
     def initialize(name)
       @name = name
       @players = []
+      @score = 0
     end
 
     def add(player)

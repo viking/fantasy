@@ -18,5 +18,10 @@ class TestFantasy < MiniTest::Unit::TestCase
       @team.add(@player)
       assert_equal(@player, @team.find_player("K. Collins"))
     end
+
+    def test_score
+      @team.score = 27
+      assert_equal(27, @team.score)
+    end
   end
 end

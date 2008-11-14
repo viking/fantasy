@@ -5,8 +5,10 @@ class Fantasy
     def initialize(name, config)
       @name   = name
       @config = config
-      @stats  = Hash.new { |h, k| h[k] = {} }
       @points = 0.0
+      @stats  = Hash.new do |h, k|
+        h[k] = Hash.new { |h, k| h[k] = 0.0 }
+      end
     end
 
     def via(category)
@@ -14,9 +16,9 @@ class Fantasy
       self
     end
 
-    def had(num, type)
+    def add(num, type)
       num = num.to_f
-      @stats[@category][type] = num
+      @stats[@category][type] += num
       @points += @config.points_for(num, @category, type)
     end
   end
