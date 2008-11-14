@@ -5,18 +5,18 @@ class TestFantasy < MiniTest::Unit::TestCase
 
     def setup
       @team = Fantasy::Team.new("Tennessee")
+      @player = MiniTest::Mock.new
+      @player.stub!(:name, "K. Collins")
     end
 
     def test_adding_players
-      player = Fantasy::Player.new("K. Collins")
-      @team.add(player)
-      assert_equal(player, @team.players.first)
+      @team.add(@player)
+      assert_equal(@player, @team.players.first)
     end
 
     def test_find_player
-      player = Fantasy::Player.new("K. Collins")
-      @team.add(player)
-      assert_equal(player, @team.find_player("K. Collins"))
+      @team.add(@player)
+      assert_equal(@player, @team.find_player("K. Collins"))
     end
   end
 end

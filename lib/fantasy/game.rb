@@ -43,8 +43,9 @@ class Fantasy
     !x
 
     attr_reader :home_team, :away_team
-    def initialize(body)
-      @body = body
+    def initialize(body, config)
+      @body   = body
+      @config = config
       parse_body
     end
 
@@ -72,7 +73,7 @@ class Fantasy
             puts "    Player: #{name}"  if $DEBUG
             player = team.find_player(name)
             unless player
-              player = Player.new(name)
+              player = Player.new(name, @config)
               team.add(player)
             end
             stats = md[:player_stats].scan(/>(\d+(?:\.\d+)?)(?:&nbsp;)?</)

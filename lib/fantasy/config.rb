@@ -119,8 +119,8 @@ class Fantasy
 
     # Calculate points
     def points_for(num, category, type)
-      r = @hash[category][type]
-      r.calculate(num)
+      r = @hash[category] ? @hash[category][type] : nil
+      r ? r.calculate(num) : 0.0
     end
   end
 end

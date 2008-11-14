@@ -1,10 +1,12 @@
 class Fantasy
   class Player
-    attr_reader :name, :stats
+    attr_reader :name, :stats, :points
 
-    def initialize(name)
-      @name = name
-      @stats = Hash.new { |h, k| h[k] = {} }
+    def initialize(name, config)
+      @name   = name
+      @config = config
+      @stats  = Hash.new { |h, k| h[k] = {} }
+      @points = 0.0
     end
 
     def via(category)
@@ -13,7 +15,9 @@ class Fantasy
     end
 
     def had(num, type)
-      @stats[@category][type] = num.to_f
+      num = num.to_f
+      @stats[@category][type] = num
+      @points += @config.points_for(num, @category, type)
     end
   end
 end
