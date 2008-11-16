@@ -7,13 +7,10 @@ class TestFantasy < MiniTest::Unit::TestCase
     end
 
     def test_fetching
-      urls, bodies = [], []
-      @fetcher.fetch(["/foo.txt", "/bar.txt"]) do |url, body|
-        urls   << url
-        bodies << body
+      @fetcher.fetch("/foo.txt") do |body|
+        assert_equal(body, "foo\n")
       end
-      assert_equal(urls.sort, %w{http://localhost:4331/foo.txt http://localhost:4331/bar.txt}.sort)
-      assert_equal(bodies.sort, ["foo\n", "bar\n"].sort)
+      @fetcher.join
     end
   end
 end

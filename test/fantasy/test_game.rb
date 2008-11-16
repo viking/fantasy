@@ -5,9 +5,10 @@ class TestFantasy < MiniTest::Unit::TestCase
     include ConfigHelper
 
     def create_game(num, config = create_config)
-      fn = "/nfl/boxscore_%03d.html" % num
-      @text = File.read(HTML_DIR + fn)
-      Fantasy::Game.new(@text, config)
+      url = "/nfl/boxscore_%03d.html" % num
+      g = Fantasy::Game.new(url, config)
+      config.fetcher.join
+      g
     end
 
     def test_teams
@@ -46,8 +47,14 @@ class TestFantasy < MiniTest::Unit::TestCase
       game = create_game(7)
       df = game.home_team.find_player("Defense")
       refute_nil(df)
-      p df.stats
       assert_in_delta(9.0, df.points)
+    end
+
+    def test_kickers
+      game = create_game(7)
+      player = game.home_team.find_player("R. Bironas")
+      refute_nil(player)
+      assert_in_delta(13.0, player.points)
     end
   end
 end

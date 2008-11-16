@@ -16,10 +16,13 @@ class Fantasy
       self
     end
 
-    def add(num, type)
-      num = num.to_f
-      @stats[@category][type] += num
-      @points += @config.points_for(num, @category, type)
+    def add(*args)
+      stats = args.length == 2 ? [args] : args[0]
+      stats.each do |(num, type)|
+        num = num.to_f
+        @stats[@category][type] += num
+        @points += @config.points_for(num, @category, type)
+      end
     end
   end
 end

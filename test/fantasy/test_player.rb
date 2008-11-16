@@ -15,7 +15,8 @@ class TestFantasy < MiniTest::Unit::TestCase
     def test_adding_stats
       @player.via("Passing").add("10", "Comp")
       @player.via("Passing").add("10", "Comp")
-      assert_in_delta(20.0, @player.stats["Passing"]["Comp"])
+      @player.via("Passing").add([["10", "Comp"]])
+      assert_in_delta(30.0, @player.stats["Passing"]["Comp"])
     end
 
     def test_points

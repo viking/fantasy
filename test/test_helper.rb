@@ -29,7 +29,7 @@ end
 
 module ConfigHelper
   def create_config
-    config = Fantasy::Config.new
+    config = Fantasy::Config.new('http://localhost:4331/nfl/scoreboard.html')
     config.for("Passing") do
       give(1).point.per(50, "Yds")
       give(6).points.foreach("TD")

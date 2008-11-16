@@ -104,8 +104,10 @@ class Fantasy
         end
     end
 
-    def initialize
+    attr_reader :fetcher
+    def initialize(url)
       @hash = {}
+      @fetcher = Fetcher.new(url)
     end
 
     def [](key)

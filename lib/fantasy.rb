@@ -7,19 +7,16 @@ class Fantasy
 
   def initialize(url)
     @url = url
-    @fetcher = Fetcher.new(url)
-    @config = Config.new
+    @config = Config.new(url)
     yield @config   if block_given?
   end
 
   def run
-    @fetcher.fetch([@url]) do |url, body|
+    @config.fetcher.fetch(@url) do |body|
       @scoreboard = Scoreboard.new(body)
+      @games = @scoreboard.box_scores.collect { |b| Game.new(b, @config) }
     end
-    @games = []
-    @fetcher.fetch(@scoreboard.box_scores) do |url, body|
-      @games << Game.new(body, @config)
-    end
+    @config.fetcher.join
   end
 
   def points_for(*args)
