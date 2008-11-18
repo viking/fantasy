@@ -3,7 +3,6 @@ require 'benchmark'
 $:.unshift(File.dirname(__FILE__) + "/../lib")
 require 'fantasy'
 
-$DEBUG = true
 Benchmark.bm do |x|
   x.report do
     f = Fantasy.new("http://sports.yahoo.com/nfl/scoreboard") do |config|
@@ -38,5 +37,27 @@ Benchmark.bm do |x|
       end
     end
     f.run
+
+    team = f.create_team("Norwegian Pillagers") do
+      add "JaMarcus Russell", "Oakland"
+      add "Marvin Harrison", "Indianapolis"
+      add "Laveranues Coles", "NY Jets"
+      add "Bernard Berrian", "Minnesota"
+      add "Willie Parker", "Pittsburgh"
+      add "Joseph Addai", "Indianapolis"
+      add "John Carlson", "Seattle"
+      add "Olindo Mare", "Seattle"
+      add "Defense", "Baltimore"
+    end
+
+    puts "+--------------------+--------+"
+    puts "| Player             | Points |"
+    puts "+--------------------+--------+"
+    team.players.each do |p|
+      puts "| %18s | %2.6f |" % [p.name, p.points]
+    end
+    puts "+--------------------+--------+"
+    puts "                     | %2.6f |" % team.points
+    puts "                     +--------+"
   end
 end

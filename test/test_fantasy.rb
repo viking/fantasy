@@ -6,10 +6,15 @@ class TestFantasy < MiniTest::Unit::TestCase
     @scoreboard.expect(:box_scores, ["/foo.txt"])
     Fantasy::Scoreboard.stub!(:new, @scoreboard)
 
+    @team = MiniTest::Mock.new
+    @team.expect(:name, "Leet")
+
     @game = MiniTest::Mock.new
+    @game.expect(:home_team, @team)
+    @game.expect(:away_team, @team)
     Fantasy::Game.stub!(:new, @game)
 
-    @fantasy = Fantasy.new("http://localhost:4331/bar.txt")
+    @fantasy = Fantasy.new("http://localhost:4331/foo.txt")
   end
 
   def test_passing_config
@@ -122,8 +127,23 @@ class TestFantasy < MiniTest::Unit::TestCase
     assert_equal(@game, @fantasy.games.first)
   end
 
+#  def test_team_setup
+#    Fantasy::Scoreboard.unstub!(:new)
+#    Fantasy::Game.unstub!(:new)
+#    fantasy = Fantasy.new("http://localhost:4331/nfl/mini-scoreboard.html")
+#    fantasy.run
+#    team = fantasy.create_team("Norwegian Pillagers") do
+#      add "Kerry Collins", "Tennessee"
+#      add "Ryan Grant", "Green Bay"
+#    end
+#    p team
+#    assert_in_delta(48.72, team.points)
+#  end
+
   def teardown
     Fantasy::Scoreboard.unstub!(:new)
     Fantasy::Game.unstub!(:new)
   end
 end
+
+

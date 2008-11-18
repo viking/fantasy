@@ -1,1 +1,2 @@
-- parse play-by-play
+- add database backend
+- get current score for games that are in progress (for defense)

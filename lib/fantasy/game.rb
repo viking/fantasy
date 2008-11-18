@@ -136,13 +136,13 @@ class Fantasy
         ){0}
         (?<fg>
           <td\svalign="top">
-            (?<player_name>[\w\s\.\-']+)\s
+            (?<player_name>\w{1,2}\.\s[\w\-']+)\s
             (?<result>kicked|missed)\sa\s
             (?<yards>\d+)-yard\sfield\sgoal
           </td>
         ){0}
         (?<pat>
-          (?<player_name>[\w\s\.\-']+)\s
+          (?<player_name>\w{1,2}\.\s[\w\-']+)\s
           (?<result>made|missed)\s
           PAT
         ){0}
