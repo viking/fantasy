@@ -25,7 +25,7 @@ class Fantasy
       end
 
       def calculate(num)
-        res = nil
+        res = 0.0
         @ranges.each_pair do |range, hsh|
           next  unless range === num
           res = hsh[:negated] ? 0 - hsh[:points] : hsh[:points]

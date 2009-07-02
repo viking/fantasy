@@ -24,6 +24,13 @@ class TestFantasy < MiniTest::Unit::TestCase
       assert_equal(@player, @team.find_player_by_full_name("Kerry Collins"))
     end
 
+    def test_find_player_by_full_name_with_defense
+      defense = MiniTest::Mock.new
+      defense.stub!(:name, "Defense")
+      @team.add(defense)
+      assert_equal(defense, @team.find_player_by_full_name("Defense"))
+    end
+
     def test_score
       @team.score = 27
       assert_equal(27, @team.score)

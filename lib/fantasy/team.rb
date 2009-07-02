@@ -17,8 +17,14 @@ class Fantasy
     end
 
     def find_player_by_full_name(name)
-      first, last = name.split
-      find_player("#{first[0]}. #{last}")
+      abbrev = case name
+               when "Defense"
+                 name
+               else
+                 first, last = name.split
+                 "#{first[0]}. #{last}"
+               end
+      find_player(abbrev)
     end
 
     def points

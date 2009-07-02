@@ -14,9 +14,13 @@ class Fantasy
       instance_eval(&block)
     end
 
-    def add(player, team)
-      t = @fantasy.teams[team]
-      @team.add(t.find_player(player))
+    def add(player_name, team_name)
+      t = @fantasy.teams[team_name]
+      raise "team '#{team_name}' not found"   unless t
+
+      player = t.find_player_by_full_name(player_name)
+      raise "player '#{player_name}' not found for team '#{team_name}'"   unless player
+      @team.add(player)
     end
   end
 

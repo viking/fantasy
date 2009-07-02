@@ -12,6 +12,7 @@ class Fantasy
       uri = URI.parse(url)
       uri.host = @host; uri.scheme = @scheme; uri.port = @port
 
+      url = uri.to_s
       @threads << Thread.new(uri.to_s) do |url|
         body = Curl::Easy.perform(url).body_str
         puts "Done fetching: #{url}"  if $DEBUG

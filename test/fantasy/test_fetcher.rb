@@ -2,6 +2,7 @@ require File.dirname(__FILE__) + "/../test_helper"
 
 class TestFantasy < MiniTest::Unit::TestCase
   class TestFetcher < MiniTest::Unit::TestCase
+
     def setup
       @fetcher = Fantasy::Fetcher.new("http://localhost:4331")
     end
